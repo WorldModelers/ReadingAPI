@@ -1,0 +1,121 @@
+---
+openapi: 3.0.0
+info:
+  title: "Reading API"
+  description: "This is a general API specification for World Modelers reading components."
+  version: "0.0.1"
+  
+servers:
+  - url: http://localhost:8080
+    description: Local server for testing
+
+paths:
+  /process_text:
+    post:
+      tags:
+      - "process"
+      summary: "Submit text for reading"
+      description: "Submit an object containing the key `text` whose value is the\
+        \ text to be processed by the reader."
+      requestBody:
+        description: "A `text` object."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Text"
+      responses:
+        200:
+          description: "SUCCESS"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+  /status/{ID}:
+    get:
+      tags:
+      - "status"
+      summary: "Submit ID and receive reading status for request"
+      description: "Submit an object containing the key `ID` whose value is the ID \
+        returned by a `process` request. Receive the status for this reading request."
+      parameters:
+      - in: path
+        name: ID
+        description: "An `ID` object."
+        required: true
+        schema:
+          $ref: "#/components/schemas/ID"
+      responses:
+        200:
+          description: "SUCCESS"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+  /results/{ID}:
+    get:
+      tags:
+      - "results"
+      summary: "Submit ID and receive reading results for request"
+      description: "Submit an object containing the key `ID` whose value is the ID\
+        \ returned by a `process` request. Receive the results for this reading request\
+        \ if the reading is `Done`."
+      parameters:
+      - in: path
+        name: ID
+        description: "An `ID` object."
+        required: true
+        schema:
+          $ref: "#/components/schemas/ID"
+      responses:
+        200:
+          description: "SUCCESS"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Results"
+components:
+  schemas:
+    Text:
+      type: "object"
+      description: "A text object submitted for reading."
+      required:
+      - "Text"
+      properties:
+        Text:
+          type: "string"
+          example: "Flooding caused disruption in the region."   
+    ID:
+      type: "string"
+      description: "Unique identifier for reading request"
+      example: "FE8201E0718AD4F97E4FAB192A2DBB5BD7CB2D6F"          
+    Status:
+      type: "object"
+      description: "A status object describing a reading submission status."
+      required:
+      - "ID"
+      - "Status"
+      properties:
+        ID:
+          $ref: '#/components/schemas/ID'
+        Status:
+          type: "string"
+          example: "Processing"
+          description: "Reading request status"
+          enum:
+          - "Processing"
+          - "Done"
+      example:
+        Status: "Processing"
+        ID: "FE8201E0718AD4F97E4FAB192A2DBB5BD7CB2D6F"
+    Results:
+      type: "object"
+      description: "A result object for a completed reading."
+      properties:
+        Result:
+          type: "object"
+          description: "The result of reading."
+        Metadata:
+          type: "object"
+          description: "Arbitrary metadata associated with a reading."
+          example: {"Reader": "Eidos", "Version": "0.2.1"}
