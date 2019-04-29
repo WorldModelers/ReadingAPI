@@ -9,4 +9,4 @@ docker pull swaggerapi/swagger-editor:latest
 docker run -d -p 80:8080 swaggerapi/swagger-editor
 ```
 
-This will run Swagger Editor (in detached mode) on port 80 on your machine, so you can open it by navigating to http://localhost in your browser.
+This will run Swagger Editor (in detached mode) on port 80 on your machine, so you can open it by navigating to http://localhost in your browser. From there, you can paste the content from `Reading-API.yaml` to analyze the schema and models and make edits, leveraging the Swagger Editor's validation functionality.
